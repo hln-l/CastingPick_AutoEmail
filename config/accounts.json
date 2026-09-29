@@ -1,0 +1,10 @@
+{
+  "keywords": [
+    "티켓 오픈",
+    "ticket open"
+  ],
+  "notification": {
+    "email_to": "castingpick@naver.com"
+  },
+  "accounts": []
+}

@@ -1,0 +1,51 @@
+name: Daily Instagram ticket watch
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "10 16 * * *"
+      timezone: "Asia/Seoul"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-instagram-watch
+  cancel-in-progress: false
+
+jobs:
+  collect-and-email:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Test
+        run: PYTHONPATH=src python -m unittest discover -s tests -v
+      - name: Collect at 16:10 and email at 16:15
+        env:
+          INSTAGRAM_IG_USER_ID: ${{ secrets.INSTAGRAM_IG_USER_ID }}
+          INSTAGRAM_ACCESS_TOKEN: ${{ secrets.INSTAGRAM_ACCESS_TOKEN }}
+          INSTAGRAM_GRAPH_VERSION: ${{ vars.INSTAGRAM_GRAPH_VERSION || 'v24.0' }}
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+        run: PYTHONPATH=src python -m ticket_watch.main --send-at 16:15
+      - name: Save duplicate-prevention state
+        run: |
+          if git diff --quiet -- state/seen.json; then exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add state/seen.json
+          git commit -m "chore: update Instagram watch state"
+          git push
+      - name: Keep report as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-ticket-report
+          path: reports/*.csv
+          retention-days: 14
