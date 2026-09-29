@@ -40,13 +40,15 @@ GitHub 저장소의 Settings → Secrets and variables → Actions에 다음 Rep
 | `INSTAGRAM_IG_USER_ID` | 조회에 사용할 본인 Instagram 프로페셔널 계정 ID |
 | `INSTAGRAM_ACCESS_TOKEN` | Meta 장기 액세스 토큰 |
 | `SMTP_HOST` | 예: Gmail은 `smtp.gmail.com` |
-| `SMTP_PORT` | SSL SMTP는 보통 `465` |
+| `SMTP_PORT` | 네이버 메일은 `587` |
 | `SMTP_USERNAME` | SMTP 로그인 이메일 |
 | `SMTP_PASSWORD` | Gmail 사용 시 일반 비밀번호가 아닌 앱 비밀번호 |
 | `EMAIL_FROM` | 발신 주소 |
 | `EMAIL_TO` | 선택 사항. 설정하면 `config/accounts.json`의 수신 주소보다 우선함 |
 
 Repository variable `INSTAGRAM_GRAPH_VERSION`에는 사용할 Graph API 버전(예: `v24.0`)을 넣을 수 있습니다. workflow는 매일 한국 시간 16:10에 수집을 시작하고, 수집이 일찍 끝나면 16:15까지 기다렸다가 이메일을 보냅니다. GitHub Actions 자체가 늦게 시작되면 16:15 이후 수집 완료 즉시 발송됩니다. Actions 화면의 **Run workflow**로 즉시 시험할 수도 있습니다.
+
+네이버 SMTP는 `smtp.naver.com`, 포트 `587`, STARTTLS를 기본으로 사용합니다. 네이버 계정의 일반 비밀번호가 아니라 2단계 인증에서 만든 애플리케이션 비밀번호를 `SMTP_PASSWORD`에 저장하세요.
 
 중복 방지 상태를 저장하기 위해 workflow에 `contents: write` 권한이 필요합니다. 저장소 설정에서 Actions의 workflow 권한이 read/write로 허용되어 있어야 합니다.
 
