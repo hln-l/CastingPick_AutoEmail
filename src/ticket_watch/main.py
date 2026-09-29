@@ -100,10 +100,11 @@ def main() -> None:
         recipient = os.environ.get("EMAIL_TO", "").strip() or config_email
         if not recipient:
             raise RuntimeError("config의 notification.email_to 또는 EMAIL_TO를 설정해주세요.")
+        smtp_username = required_env("SMTP_USERNAME")
         send_report(
             host=required_env("SMTP_HOST"), port=int(os.environ.get("SMTP_PORT", "587")),
-            username=required_env("SMTP_USERNAME"), password=required_env("SMTP_PASSWORD"),
-            sender=os.environ.get("EMAIL_FROM", required_env("SMTP_USERNAME")),
+            username=smtp_username, password=required_env("SMTP_PASSWORD"),
+            sender=smtp_username,
             recipient=recipient,
             subject=f"[캐스팅 공지] {now.astimezone(SEOUL):%Y-%m-%d} 신규 {count}건",
             body=(f"최근 24시간 신규 티켓 오픈 공지는 {count}건입니다.\n"
