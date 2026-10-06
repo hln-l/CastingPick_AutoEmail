@@ -6,5 +6,21 @@
   "notification": {
     "email_to": "castingpick@naver.com"
   },
-  "accounts": []
+  "accounts": [
+    {"username": "snco_korea", "performance_hint": ""},
+    {"username": "shownote_theatre", "performance_hint": ""},
+    {"username": "emk_musical", "performance_hint": ""},
+    {"username": "musicalfrozen_kr", "performance_hint": ""},
+    {"username": "thebestplay2017", "performance_hint": ""},
+    {"username": "cjenm.musical", "performance_hint": ""},
+    {"username": "newpro_sansam", "performance_hint": ""},
+    {"username": "sucompany_art", "performance_hint": ""},
+    {"username": "i_seensee", "performance_hint": ""},
+    {"username": "od_musical", "performance_hint": ""},
+    {"username": "choirofman_kr", "performance_hint": ""},
+    {"username": "mbz_company", "performance_hint": ""},
+    {"username": "lempickakr", "performance_hint": ""},
+    {"username": "hongcompany", "performance_hint": ""},
+    {"username": "hellskitchen_kr", "performance_hint": ""}
+  ]
 }
