@@ -39,15 +39,23 @@ GitHub 저장소의 Settings → Secrets and variables → Actions에 다음 Rep
 |---|---|
 | `INSTAGRAM_IG_USER_ID` | 조회에 사용할 본인 Instagram 프로페셔널 계정 ID |
 | `INSTAGRAM_ACCESS_TOKEN` | Meta 장기 액세스 토큰 |
-| `SMTP_HOST` | 예: Gmail은 `smtp.gmail.com` |
-| `SMTP_PORT` | 네이버 메일은 `587` |
-| `SMTP_USERNAME` | SMTP 로그인 이메일 |
-| `SMTP_PASSWORD` | Gmail 사용 시 일반 비밀번호가 아닌 앱 비밀번호 |
+| `RESEND_API_KEY` | Resend에서 생성한 Sending access API 키 |
+| `RESEND_FROM` | 선택 사항. 인증한 도메인의 발신 주소. 기본값은 `CastingPick <onboarding@resend.dev>` |
 | `EMAIL_TO` | 선택 사항. 설정하면 `config/accounts.json`의 수신 주소보다 우선함 |
 
 Repository variable `INSTAGRAM_GRAPH_VERSION`에는 사용할 Graph API 버전(예: `v24.0`)을 넣을 수 있습니다. workflow는 매일 한국 시간 16:10에 수집을 시작하고, 수집이 일찍 끝나면 16:15까지 기다렸다가 이메일을 보냅니다. GitHub Actions 자체가 늦게 시작되면 16:15 이후 수집 완료 즉시 발송됩니다. Actions 화면의 **Run workflow**로 즉시 시험할 수도 있습니다.
 
-네이버 SMTP는 `smtp.naver.com`, 포트 `587`, STARTTLS를 기본으로 사용합니다. 네이버 계정의 일반 비밀번호가 아니라 2단계 인증에서 만든 애플리케이션 비밀번호를 `SMTP_PASSWORD`에 저장하세요. 발신 주소는 `SMTP_USERNAME`을 자동으로 사용하므로 `EMAIL_FROM` 설정은 필요하지 않습니다.
+메일은 Resend API로 보내므로 네이버 비밀번호나 SMTP 설정이 필요하지 않습니다. 기존 `SMTP_*` Secrets는 더 이상 사용하지 않습니다. 수동 Run workflow는 수집 후 즉시 발송하고, 예약 실행만 16:15까지 기다립니다.
+
+### Resend 연결 순서
+
+1. [Resend](https://resend.com/signup)에 `castingpick@naver.com` 주소로 가입하고 이메일 인증을 완료합니다.
+2. [API Keys](https://resend.com/api-keys)에서 Create API Key를 누르고 이름을 `CastingPick AutoEmail`, 권한을 Sending access로 설정합니다.
+3. 생성된 키를 GitHub Secret `RESEND_API_KEY`에 직접 저장합니다. 채팅이나 소스에 넣지 마세요.
+4. 기본 발신 주소 `onboarding@resend.dev`는 Resend 가입 이메일로만 발송할 수 있으므로, 위 주소로 가입하면 현재 수신 주소에 테스트할 수 있습니다. 다른 주소로 가입했다면 [Domains](https://resend.com/domains)에서 본인이 소유한 도메인을 DNS로 인증하고 해당 도메인 주소를 `RESEND_FROM`에 등록해야 합니다. `naver.com`은 본인 소유 도메인이 아니므로 인증할 수 없습니다.
+5. Instagram Secrets와 watch list까지 설정한 뒤 Actions의 Run workflow로 시험합니다. API 접수 성공과 받은편지함 도착은 별개이므로 Resend Emails 및 네이버 스팸함도 확인하세요.
+
+공식 문서: [발송 API와 첨부파일](https://resend.com/docs/api-reference/emails/send-email), [기본 발신 도메인의 수신자 제한](https://resend.com/docs/knowledge-base/403-error-resend-dev-domain).
 
 중복 방지 상태를 저장하기 위해 workflow에 `contents: write` 권한이 필요합니다. 저장소 설정에서 Actions의 workflow 권한이 read/write로 허용되어 있어야 합니다.
 
